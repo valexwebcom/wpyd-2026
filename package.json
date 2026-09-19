@@ -1,0 +1,14 @@
+{
+  "name": "wpyd2026",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Proyecto Sass para WPYD 2026",
+  "scripts": {
+    "build": "sass --load-path=src src/styles.scss dist/styles.css --style=compressed --source-map",
+    "watch": "sass --watch --load-path=src src/styles.scss:dist/styles.css --style=expanded --source-map",
+    "dev": "sass --watch --load-path=src src/styles.scss:dist/styles.css --style=expanded --source-map"
+  },
+  "devDependencies": {
+    "sass": "^1.93.0"
+  }
+}
