@@ -41,12 +41,6 @@ body.page-slug-entradas {
    ============================================================ */
 
 #tix {
-  --wpyd-yellow: #{$yellow};
-  --wpyd-orange: #{$orange};
-  --wpyd-blue: #{$blue};
-  --wpyd-text: #{$text};
-  --wpyd-muted: #{$muted};
-
   color: $text;
   margin: 2rem auto 3rem;
 
@@ -139,25 +133,45 @@ body.page-slug-entradas {
       }
 
       /* ---------- Tarjeta ---------- */
-      /* Colores rotativos: amarillo → naranja → azul */
+      /* Colores rotativos: amarillo → naranja → azul.
+         Se fijan colores directos (nada de custom properties):
+         el CSS remoto que jala WordCamp Central vía webhook
+         elimina las declaraciones --variable al sanitizarlo. */
 
       tr {
-        --card: #{$yellow};
         position: relative;
         display: flex;
         flex-direction: column;
         background: transparent;
-        border: 2px solid var(--card);
+        border: 2px solid $yellow;
         border-radius: 22px;
         padding: 26px 26px 110px;
         transition: transform 0.2s ease, box-shadow 0.2s ease;
 
         &:nth-child(3n + 2) {
-          --card: #{$orange};
+          border-color: $orange;
+
+          .tix-column-price,
+          .tix-column-remaining {
+            color: $orange;
+          }
+
+          .tix-column-quantity select {
+            background-color: $orange;
+          }
         }
 
         &:nth-child(3n + 3) {
-          --card: #{$blue};
+          border-color: $blue;
+
+          .tix-column-price,
+          .tix-column-remaining {
+            color: $blue;
+          }
+
+          .tix-column-quantity select {
+            background-color: $blue;
+          }
         }
 
         &:hover {
@@ -220,7 +234,7 @@ body.page-slug-entradas {
       @include font-display;
       font-weight: 600;
       line-height: 1;
-      color: var(--card);
+      color: $yellow;
 
       @include breakpoint-down($bp-ticket-card) {
         left: 20px;
@@ -257,7 +271,7 @@ body.page-slug-entradas {
       select {
         @include appearance-none;
         @include font-display;
-        background-color: var(--card);
+        background-color: $yellow;
         background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
         background-repeat: no-repeat;
         background-position: right 12px center;
