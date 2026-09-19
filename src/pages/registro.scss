@@ -1,0 +1,650 @@
+@use "abstracts" as *;
+
+/* ============================================================
+   WPYD NIC 2026 — Resumen del pedido + Información de registro
+   ============================================================ */
+
+/* ---------- Fondo morado ---------- */
+
+body.page-slug-entradas {
+  &,
+  .wp-site-blocks,
+  main {
+    background-color: $purple;
+  }
+
+  main {
+    &,
+    p,
+    li,
+    h1,
+    h2,
+    h3 {
+      color: $white;
+    }
+  }
+
+  .sd-title,
+  .sd-content a {
+    color: rgb(255 255 255 / 85%) !important;
+  }
+}
+
+/* Romper el ancho de 620px del tema */
+.entry-content > #tix {
+  max-width: $wide-size;
+  width: 100%;
+}
+
+/* ============================================================
+   WPYD NIC 2026 — Formulario de entradas (CampTix)
+   ============================================================ */
+
+#tix {
+  --wpyd-yellow: #{$yellow};
+  --wpyd-orange: #{$orange};
+  --wpyd-blue: #{$blue};
+  --wpyd-text: #{$text};
+  --wpyd-muted: #{$muted};
+
+  color: $text;
+  margin: 2rem auto 3rem;
+
+  /* ---------- Títulos de sección ---------- */
+
+  h2 {
+    color: $white;
+    @include font-display;
+    font-size: clamp(1.6rem, 1.3rem + 1.3vw, 2.3rem);
+    font-weight: 600;
+    margin: 2.8rem 0 1.3rem;
+  }
+
+  .tix-clear {
+    display: none;
+  }
+
+  /* ---------- Avisos y errores de CampTix ---------- */
+
+  .tix-error,
+  .tix-notice {
+    border-radius: 12px;
+    padding: 1rem 1.2rem;
+    color: $white;
+    background: rgb(0 0 0 / 25%);
+    border-left: 4px solid $orange;
+  }
+
+  .tix-required-star {
+    color: $orange;
+    margin-left: 2px;
+  }
+
+  /* Título de la sección, solo en la pantalla de selección */
+
+  form:has(.tix-tickets-list) {
+    &::before {
+      content: "Selecciona tu entrada";
+      display: block;
+      @include font-display;
+      font-size: clamp(1.4rem, 1.2rem + 1vw, 2rem);
+      font-weight: 600;
+      color: $text;
+      margin-bottom: 1.6rem;
+    }
+
+    > p {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 2.5rem;
+
+      @include breakpoint-down($bp-ticket-card) {
+        justify-content: stretch;
+      }
+    }
+
+    /* ---------- Botón Regístrate ---------- */
+
+    input[type="submit"] {
+      @include tix-cta;
+      font-size: clamp(1.3rem, 1.1rem + 0.8vw, 1.9rem);
+      letter-spacing: 0.5px;
+
+      @include breakpoint-down($bp-ticket-card) {
+        width: 100%;
+      }
+    }
+  }
+
+  /* ---------- La tabla deja de ser tabla y pasa a ser grid ---------- */
+
+  .tix-tickets-list {
+    display: block;
+    width: 100%;
+    border: 0;
+    background: transparent;
+    margin: 0;
+
+    thead {
+      display: none;
+    }
+
+    tbody {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+      gap: 28px;
+
+      @include breakpoint-down($bp-ticket-card) {
+        gap: 20px;
+      }
+
+      /* ---------- Tarjeta ---------- */
+      /* Colores rotativos: amarillo → naranja → azul */
+
+      tr {
+        --card: #{$yellow};
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        background: transparent;
+        border: 2px solid var(--card);
+        border-radius: 22px;
+        padding: 26px 26px 110px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+        &:nth-child(3n + 2) {
+          --card: #{$orange};
+        }
+
+        &:nth-child(3n + 3) {
+          --card: #{$blue};
+        }
+
+        &:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 10px 28px rgb(0 0 0 / 25%);
+        }
+
+        @include breakpoint-down($bp-ticket-card) {
+          padding: 22px 20px 104px;
+        }
+      }
+    }
+
+    /* Anular bordes/fondos que trae camptix.css en las celdas */
+
+    th,
+    td {
+      display: block;
+      background: transparent;
+      border: 0;
+      padding: 0;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    /* ---------- Contenido de la tarjeta ---------- */
+
+    .tix-column-description {
+      font-weight: 400;
+
+      br {
+        display: none;
+      }
+    }
+
+    .tix-ticket-title {
+      display: block;
+      @include font-display;
+      font-size: 1.45rem;
+      font-weight: 600;
+      line-height: 1.2;
+      color: $text;
+      margin-bottom: 0.55rem;
+    }
+
+    .tix-ticket-excerpt {
+      display: block;
+      font-size: 0.98rem;
+      line-height: 1.45;
+      color: $muted;
+    }
+
+    /* ---------- Precio ---------- */
+    /* ---------- Restantes: debajo del precio ---------- */
+
+    .tix-column-price,
+    .tix-column-remaining {
+      position: absolute;
+      left: 26px;
+      @include font-display;
+      font-weight: 600;
+      line-height: 1;
+      color: var(--card);
+
+      @include breakpoint-down($bp-ticket-card) {
+        left: 20px;
+      }
+    }
+
+    .tix-column-price {
+      bottom: 42px;
+      font-size: 1.5rem;
+    }
+
+    .tix-column-remaining {
+      bottom: 14px;
+      font-size: 0.85rem;
+
+      &::after {
+        content: " restantes";
+        font-weight: 400;
+        color: $muted;
+      }
+    }
+
+    /* ---------- Selector de cantidad ---------- */
+
+    .tix-column-quantity {
+      position: absolute;
+      right: 26px;
+      bottom: 22px;
+
+      @include breakpoint-down($bp-ticket-card) {
+        right: 20px;
+      }
+
+      select {
+        @include appearance-none;
+        @include font-display;
+        background-color: var(--card);
+        background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        background-size: 18px;
+        border: 0;
+        border-radius: 6px;
+        color: $white;
+        font-size: 1.25rem;
+        font-weight: 600;
+        line-height: 1;
+        padding: 12px 42px 12px 18px;
+        cursor: pointer;
+        box-shadow: 0 3px 10px rgb(0 0 0 / 20%);
+
+        &:focus-visible {
+          outline: 2px solid $white;
+          outline-offset: 2px;
+        }
+
+        option {
+          background: $purple;
+          color: $white;
+        }
+      }
+    }
+  }
+
+  /* ---------- Caja común de las dos tablas ---------- */
+
+  .tix-order-summary,
+  .tix-attendee-form {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 2px solid $yellow;
+    border-radius: 16px;
+    overflow: hidden;
+    background: transparent;
+    color: $white;
+    margin: 0 0 2rem;
+    font-size: 1rem;
+
+    td,
+    th {
+      background: transparent;
+      border: 0;
+      color: $white;
+      font-weight: 300;
+      padding: 14px 24px;
+      vertical-align: middle;
+    }
+
+    @include breakpoint-down($bp-form) {
+      /* ---------- Móvil ---------- */
+      border-radius: 12px;
+    }
+  }
+
+  /* ---------- Resumen del pedido ---------- */
+
+  .tix-order-summary {
+    thead th {
+      background: $orange;
+      color: $white;
+      @include font-display;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+      padding-top: 17px;
+      padding-bottom: 17px;
+      text-align: right;
+
+      &.tix-column-description {
+        text-align: left;
+      }
+    }
+
+    tbody td {
+      border-bottom: 1px dashed rgb(255 255 255 / 30%);
+      text-align: right;
+      white-space: nowrap;
+
+      &.tix-column-description {
+        text-align: left;
+        white-space: normal;
+
+        strong {
+          font-weight: 300;
+        }
+      }
+    }
+
+    /* Fila de total */
+
+    .tix-row-total {
+      td {
+        border-bottom: 0;
+        border-top: 1px solid rgb(255 255 255 / 50%);
+        padding-top: 20px;
+        padding-bottom: 20px;
+
+        &:first-child::before {
+          content: "Total";
+          float: left;
+          font-weight: 300;
+        }
+      }
+
+      strong {
+        font-weight: 500;
+      }
+    }
+
+    .tix-row-discount td {
+      color: $yellow;
+    }
+  }
+
+  /* ---------- Información de registro ---------- */
+
+  .tix-attendee-form {
+    /* Encabezado "1. Fila 0" */
+
+    th[colspan] {
+      border-bottom: 1px solid rgb(255 255 255 / 50%);
+      @include font-display;
+      font-size: 1.05rem;
+      font-weight: 400;
+      padding-top: 22px;
+      padding-bottom: 22px;
+      text-align: left;
+    }
+
+    /* Filas pregunta / respuesta */
+
+    tbody tr {
+      td {
+        border-bottom: 1px dashed rgb(255 255 255 / 22%);
+      }
+
+      &:last-child td {
+        border-bottom: 0;
+      }
+    }
+
+    td.tix-left {
+      width: 55%;
+      line-height: 1.45;
+      padding-right: 30px;
+
+      label {
+        font-weight: 300;
+      }
+
+      a {
+        color: $yellow;
+        text-decoration: underline;
+      }
+    }
+
+    td.tix-right {
+      width: 45%;
+      text-align: right;
+    }
+
+    /* ---------- Campos de texto ---------- */
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="url"],
+    input[type="date"],
+    input[type="number"],
+    select,
+    textarea {
+      width: 100%;
+      max-width: 340px;
+      background: transparent;
+      border: 1px solid rgb(255 255 255 / 55%);
+      border-radius: 5px;
+      color: $white;
+      @include font-display;
+      font-size: 1rem;
+      font-weight: 300;
+      padding: 9px 14px;
+      text-align: center;
+      box-shadow: none;
+    }
+
+    textarea {
+      min-height: 96px;
+      text-align: left;
+      resize: vertical;
+    }
+
+    ::placeholder {
+      color: rgb(255 255 255 / 45%);
+      opacity: 1;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: $yellow;
+      outline: none;
+    }
+
+    select option {
+      background: $purple;
+      color: $white;
+    }
+
+    /* ---------- Opciones (radio / checkbox) ---------- */
+
+    input[type="checkbox"],
+    input[type="radio"] {
+      @include appearance-none;
+      flex: 0 0 auto;
+      width: 22px;
+      height: 22px;
+      margin: 0;
+      background: transparent;
+      border: 2px solid rgb(255 255 255 / 75%);
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.15s ease, border-color 0.15s ease;
+
+      &:checked {
+        background-color: $orange;
+        border-color: $orange;
+        background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23ffffff' stroke-width='4' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='20 6 9 17 4 12'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 14px;
+      }
+
+      &:focus-visible {
+        outline: 2px solid $yellow;
+        outline-offset: 2px;
+      }
+    }
+  }
+
+  /* CampTix apila las opciones con <br>: los anulamos y usamos flex */
+
+  .tix-screen-reader-fieldset {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px 26px;
+    border: 0;
+    margin: 0;
+    padding: 0;
+
+    br {
+      display: none;
+    }
+
+    label {
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      margin: 0;
+      font-size: 0.95rem;
+      font-weight: 300;
+      line-height: 1.3;
+      white-space: nowrap;
+      cursor: pointer;
+    }
+  }
+
+  /* ---------- Aviso sanitario ---------- */
+
+  .tix-row-health-advisory {
+    td {
+      color: $muted;
+      font-size: 0.92rem;
+      line-height: 1.55;
+      padding-top: 20px;
+      padding-bottom: 20px;
+    }
+
+    p {
+      margin: 0 0 0.8rem;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  /* ---------- Métodos de pago ---------- */
+
+  .tix-submit {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 14px;
+    margin: 2rem 0 3rem;
+  }
+
+  .tix-payment-method {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-right: auto;
+  }
+
+  .tix-payment-tab {
+    background: transparent;
+    border: 1px solid rgb(255 255 255 / 50%);
+    border-radius: 999px;
+    color: $white;
+    @include font-display;
+    font-size: 0.95rem;
+    font-weight: 300;
+    padding: 9px 18px;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease;
+
+    &:hover {
+      border-color: $yellow;
+    }
+
+    &.tix-tab-selected {
+      background: rgb(255 255 255 / 12%);
+      border-color: $yellow;
+      color: $yellow;
+      font-weight: 500;
+    }
+  }
+
+  .tix-payment-method-container {
+    flex: 1 0 100%;
+    border: 1px solid rgb(255 255 255 / 35%);
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-top: 4px;
+
+    &.tix-hidden {
+      display: none;
+    }
+
+    fieldset {
+      border: 0;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px 28px;
+    }
+  }
+
+  .tix-alternate-payment-option {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+
+    input[type="radio"] {
+      @include appearance-none;
+      width: 20px;
+      height: 20px;
+      margin: 0;
+      background: transparent;
+      border: 2px solid rgb(255 255 255 / 75%);
+      border-radius: 50%;
+      cursor: pointer;
+
+      &:checked {
+        background: $orange;
+        border-color: $orange;
+        box-shadow: inset 0 0 0 3px $purple;
+      }
+    }
+
+    label {
+      color: $white;
+      font-weight: 300;
+      cursor: pointer;
+    }
+  }
+
+  /* ---------- Botón Pagar / Reclamar boletos ---------- */
+
+  input.tix-checkout-button {
+    @include tix-cta;
+    font-size: clamp(1.2rem, 1rem + 0.7vw, 1.6rem);
+  }
+}
