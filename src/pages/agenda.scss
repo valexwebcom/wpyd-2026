@@ -10,6 +10,17 @@ $rail-mobile: 18px;
 $line-center: 6px;
 $line-center-mobile: 5px;
 
+/* Acento de la tarjeta según la categoría de la sesión.
+   Lo que no esté en este mapa (general, sin categoría) usa el
+   neutro de la regla base: logística y ceremonias no compiten
+   con los talleres y charlas. */
+$category-colors: (
+  "taller": $orange,
+  "charla": $blue,
+  "dinamica": $yellow,
+);
+$category-neutral: rgb(255 255 255 / 32%);
+
 .wordcamp-schedule {
   margin: 1rem 0 3rem;
 
@@ -37,25 +48,33 @@ $line-center-mobile: 5px;
       display: none !important;
     }
 
+    /* Bloque con relieve, igual que el botón del header del sitio.
+       El plugin lo pinta como cabecera sticky clara
+       (background-color:#fbfbfceb; position:sticky; padding; margin)
+       con un selector más específico: hay que forzar esas tres. */
     &:not(.is-column-time) {
-      display: inline-block !important;
+      display: block !important;
       align-self: flex-start;
       position: static !important;
-      background: rgb(255 255 255 / 10%);
-      border: 1px solid rgb(255 255 255 / 25%);
-      border-radius: 999px;
+      background: $yellow !important;
+      border: 0;
+      border-radius: 4px;
+      box-shadow: 5px 5px 0 rgb(0 0 0 / 45%);
       @include font-display;
-      color: $yellow;
-      font-size: 0.8rem;
+      color: $purple;
+      font-size: 1rem;
       font-weight: 600;
-      letter-spacing: 0.5px;
+      letter-spacing: 1.2px;
       text-transform: uppercase;
-      padding: 6px 16px;
-      margin: 0 0 1.4rem -#{$rail};
+      padding: 11px 22px !important;
+      margin: 0 0 2rem -#{$rail} !important;
       width: fit-content;
 
       @include breakpoint-down($bp-ticket-card) {
-        margin-left: -#{$rail-mobile};
+        font-size: 0.85rem;
+        letter-spacing: 1px;
+        padding: 9px 16px !important;
+        margin-left: -#{$rail-mobile} !important;
       }
     }
   }
@@ -148,7 +167,7 @@ $line-center-mobile: 5px;
     position: relative;
     background: rgb(255 255 255 / 6%);
     border: 1px solid rgb(255 255 255 / 15%) !important;
-    border-left: 4px solid $orange !important;
+    border-left: 4px solid $category-neutral !important;
     border-radius: 12px;
     padding: 16px 20px;
     margin: 0 !important;
@@ -165,37 +184,28 @@ $line-center-mobile: 5px;
       box-shadow: 0 8px 20px rgb(0 0 0 / 25%);
     }
 
-    &.is-type-custom {
-      border-left-color: $yellow !important;
-    }
-
-    &.is-type-session {
-      border-left-color: $orange !important;
-    }
-
-    /* Rango de hora: destacado como badge, color según el tipo */
+    /* Rango de hora: texto destacado, mismo acento que la tarjeta */
     p {
-      display: inline-flex;
-      align-items: center;
+      display: block;
       @include font-display;
-      background: rgb(255 255 255 / 8%);
-      border-radius: 999px;
-      color: $orange;
-      font-size: 0.78rem;
+      background: transparent;
+      color: $muted;
+      font-size: 1rem;
       font-weight: 600;
-      letter-spacing: 0.2px;
-      padding: 4px 12px;
-      margin: 8px 0 10px;
+      font-variant-numeric: tabular-nums;
+      letter-spacing: 0.8px;
+      padding: 0;
+      margin: 6px 0 10px;
     }
 
-    &.is-type-custom p {
-      color: $yellow;
-      background: rgb(254 203 0 / 12%);
-    }
+    @each $slug, $color in $category-colors {
+      &.has-category-#{$slug} {
+        border-left-color: $color !important;
 
-    &.is-type-session p {
-      color: $orange;
-      background: rgb(252 120 0 / 12%);
+        p {
+          color: $color;
+        }
+      }
     }
   }
 
