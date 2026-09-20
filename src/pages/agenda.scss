@@ -1,0 +1,290 @@
+@use "abstracts" as *;
+
+/* ============================================================
+   WPYD NIC 2026 — Agenda (bloque "wordcamp/schedule")
+   ============================================================ */
+
+$time-col: 84px;
+$time-col-mobile: 62px;
+
+.wordcamp-schedule {
+  margin: 1rem 0 3rem;
+
+  /* ---------- Fecha del día ---------- */
+
+  &__date {
+    @include font-display;
+    color: $yellow;
+    font-size: clamp(1.4rem, 1.2rem + 1vw, 2rem);
+    font-weight: 600;
+    text-transform: capitalize;
+    margin: 0 0 1.4rem;
+
+    &::before {
+      content: none;
+    }
+  }
+
+  /* ---------- Encabezados de columna ---------- */
+  /* "Time" es ruido en una timeline vertical; el del squad se
+     convierte en un rótulo tipo badge encima de la línea. */
+
+  &__column-header {
+    &.is-column-time {
+      display: none !important;
+    }
+
+    &:not(.is-column-time) {
+      display: inline-block !important;
+      grid-column: 1 / -1;
+      position: static !important;
+      background: rgb(255 255 255 / 10%);
+      border: 1px solid rgb(255 255 255 / 25%);
+      border-radius: 999px;
+      @include font-display;
+      color: $yellow;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      padding: 6px 16px;
+      margin: 0 0 1.2rem;
+      width: fit-content;
+    }
+  }
+
+  /* ---------- Día: grid de 2 columnas (hora | tarjeta) ---------- */
+  /* Se fuerza el grid propio (sin usar las named lines que trae
+     el bloque) para que la timeline se vea igual en cualquier
+     ancho; las reglas del plugin quedan invalidadas por !important
+     y sus grid-row/grid-area con named lines inexistentes caen a
+     auto-placement, que es justo el orden cronológico del markup. */
+
+  &__day {
+    display: grid !important;
+    grid-template-columns: $time-col 1fr !important;
+    grid-template-rows: auto !important;
+    grid-auto-rows: auto;
+    column-gap: 20px;
+    row-gap: 0;
+    background: transparent !important;
+    position: relative;
+    padding: 0;
+
+    @include breakpoint-down($bp-ticket-card) {
+      grid-template-columns: $time-col-mobile 1fr !important;
+      column-gap: 12px;
+    }
+
+    /* Línea vertical de la timeline */
+    &::before {
+      content: "";
+      position: absolute;
+      top: 6px;
+      bottom: 6px;
+      left: $time-col;
+      width: 2px;
+      background: rgb(255 255 255 / 18%);
+
+      @include breakpoint-down($bp-ticket-card) {
+        left: $time-col-mobile;
+      }
+    }
+  }
+
+  /* ---------- Marcador de hora ---------- */
+
+  &__time-slot-header {
+    display: flex !important;
+    align-items: flex-start;
+    justify-content: flex-end;
+    position: relative;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    padding: 17px 14px 0 0;
+    margin: 0 !important;
+    color: $yellow;
+    @include font-display;
+    font-size: 0.78rem;
+    font-weight: 600;
+    line-height: 1.2;
+    text-align: right;
+    white-space: normal;
+
+    @include breakpoint-down($bp-ticket-card) {
+      font-size: 0.68rem;
+      padding-right: 10px;
+    }
+
+    &.is-empty {
+      display: none !important;
+    }
+
+    /* Punto sobre la línea, alineado con el borde superior de la tarjeta */
+    &::after {
+      content: "";
+      position: absolute;
+      top: 23px;
+      right: -6px;
+      width: 10px;
+      height: 10px;
+      background: $yellow;
+      border: 2px solid $purple;
+      border-radius: 50%;
+      transform: translateX(50%);
+      z-index: 2;
+    }
+  }
+
+  /* ---------- Tarjeta de sesión ---------- */
+
+  &__session {
+    display: block !important;
+    position: relative;
+    background: rgb(255 255 255 / 6%);
+    border: 1px solid rgb(255 255 255 / 15%) !important;
+    border-left: 4px solid $orange !important;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin: 0 0 18px !important;
+    color: $white;
+    transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+
+    @include breakpoint-down($bp-ticket-card) {
+      padding: 14px 16px;
+    }
+
+    &:hover {
+      transform: translateX(4px);
+      background: rgb(255 255 255 / 10%);
+      box-shadow: 0 8px 20px rgb(0 0 0 / 25%);
+    }
+
+    &.is-type-custom {
+      border-left-color: $yellow !important;
+    }
+
+    &.is-type-session {
+      border-left-color: $orange !important;
+    }
+
+    /* Rango de hora: destacado como badge, color según el tipo */
+    p {
+      display: inline-flex;
+      align-items: center;
+      @include font-display;
+      background: rgb(255 255 255 / 8%);
+      border-radius: 999px;
+      color: $orange;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      padding: 4px 12px;
+      margin: 8px 0 10px;
+    }
+
+    &.is-type-custom p {
+      color: $yellow;
+      background: rgb(254 203 0 / 12%);
+    }
+
+    &.is-type-session p {
+      color: $orange;
+      background: rgb(252 120 0 / 12%);
+    }
+  }
+
+  &__session-title {
+    display: block;
+    @include font-display;
+    color: $white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    line-height: 1.35;
+    margin: 0;
+
+    a {
+      color: $white;
+      text-decoration: none;
+
+      &:hover {
+        color: $orange;
+        text-decoration: underline;
+      }
+    }
+  }
+
+  /* ---------- Favorito (estrella) ---------- */
+
+  .wcb-session-favourite-icon {
+    display: inline-flex;
+    vertical-align: middle;
+    margin-left: 8px;
+
+    .fav-session-button {
+      display: inline-flex;
+      color: rgb(255 255 255 / 45%);
+      transition: color 0.15s ease;
+
+      &:hover,
+      &[aria-pressed="true"] {
+        color: $yellow;
+      }
+    }
+  }
+
+  /* ---------- Ponentes / tracks ---------- */
+
+  &__session-speakers,
+  &__session-tracks {
+    display: block !important;
+    font-size: 0.8rem;
+    line-height: 1.5;
+    margin: 2px 0 0;
+    color: $muted;
+
+    dd {
+      color: $white;
+      font-weight: 400;
+    }
+
+    a {
+      color: $orange;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  /* ---------- Categoría: badge en vez de texto plano ---------- */
+
+  &__session-category {
+    display: flex !important;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin: 8px 0 0;
+
+    dt {
+      // screen-reader-text ya la oculta visualmente
+    }
+
+    dd {
+      background: rgb(255 255 255 / 10%);
+      border: 1px solid rgb(255 255 255 / 22%);
+      border-radius: 999px;
+      color: $muted;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      padding: 3px 10px;
+
+      &::after {
+        content: none !important;
+      }
+    }
+  }
+}
