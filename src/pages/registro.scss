@@ -98,8 +98,10 @@ body.page-slug-entradas {
     }
 
     /* ---------- Botón Regístrate ---------- */
+    /* El del cupón queda fuera: es una acción secundaria y no debe
+       heredar el tamaño del CTA principal. */
 
-    input[type="submit"] {
+    input[type="submit"]:not([name="tix_coupon_submit"]) {
       @include tix-cta;
       font-size: clamp(1.3rem, 1.1rem + 0.8vw, 1.9rem);
       letter-spacing: 0.5px;
@@ -107,6 +109,61 @@ body.page-slug-entradas {
       @include breakpoint-down($bp-ticket-card) {
         width: 100%;
       }
+    }
+
+    /* ---------- Cupón ---------- */
+
+    #tix-coupon-link {
+      display: inline-block;
+      color: $yellow;
+      font-weight: 400;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+
+      &:hover {
+        color: $orange;
+      }
+    }
+
+    /* CampTix abre el cupón poniendo display:block en el style
+       inline, así que se engancha al atributo: forzar display aquí
+       rompería el estado cerrado. */
+
+    #tix-coupon-container[style*="block"] {
+      display: flex !important;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 10px;
+      margin-top: 0.9rem;
+    }
+
+    #tix-coupon-input {
+      @include appearance-none;
+      flex: 0 1 260px;
+      background: transparent;
+      border: 1px solid rgb(255 255 255 / 55%);
+      border-radius: 5px;
+      color: $white;
+      @include font-display;
+      font-size: 1rem;
+      font-weight: 300;
+      padding: 10px 14px;
+
+      &::placeholder {
+        color: rgb(255 255 255 / 45%);
+        opacity: 1;
+      }
+
+      &:focus {
+        border-color: $yellow;
+        outline: none;
+      }
+    }
+
+    input[name="tix_coupon_submit"] {
+      @include tix-cta;
+      font-size: 1rem;
+      letter-spacing: 0.3px;
     }
   }
 
@@ -181,6 +238,31 @@ body.page-slug-entradas {
 
         @include breakpoint-down($bp-ticket-card) {
           padding: 22px 20px 104px;
+        }
+      }
+
+      /* ---------- Fila del cupón ---------- */
+      /* CampTix la emite como un <tr> más del tbody, así que hereda
+         la tarjeta (borde, radio y los 110px de padding inferior).
+         Va después de los :nth-child para ganar por orden. */
+
+      tr.tix-row-coupon {
+        grid-column: 1 / -1;
+        display: block;
+        border: 0;
+        border-radius: 0;
+        padding: 0;
+
+        &:hover {
+          transform: none;
+          box-shadow: none;
+        }
+
+        /* La celda trae style="text-align:right" inline desde el
+           PHP del plugin: sin !important el enlace queda a la
+           derecha y el formulario abierto a la izquierda. */
+        td {
+          text-align: left !important;
         }
       }
     }
