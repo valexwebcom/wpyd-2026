@@ -4,8 +4,11 @@
    WPYD NIC 2026 — Agenda (bloque "wordcamp/schedule")
    ============================================================ */
 
-$time-col: 84px;
-$time-col-mobile: 62px;
+/* Distancia desde el borde del contenedor hasta el centro de la línea */
+$rail: 26px;
+$rail-mobile: 18px;
+$line-center: 6px;
+$line-center-mobile: 5px;
 
 .wordcamp-schedule {
   margin: 1rem 0 3rem;
@@ -36,7 +39,7 @@ $time-col-mobile: 62px;
 
     &:not(.is-column-time) {
       display: inline-block !important;
-      grid-column: 1 / -1;
+      align-self: flex-start;
       position: static !important;
       background: rgb(255 255 255 / 10%);
       border: 1px solid rgb(255 255 255 / 25%);
@@ -48,92 +51,93 @@ $time-col-mobile: 62px;
       letter-spacing: 0.5px;
       text-transform: uppercase;
       padding: 6px 16px;
-      margin: 0 0 1.2rem;
+      margin: 0 0 1.4rem -#{$rail};
       width: fit-content;
+
+      @include breakpoint-down($bp-ticket-card) {
+        margin-left: -#{$rail-mobile};
+      }
     }
   }
 
-  /* ---------- Día: grid de 2 columnas (hora | tarjeta) ---------- */
-  /* Se fuerza el grid propio (sin usar las named lines que trae
-     el bloque) para que la timeline se vea igual en cualquier
-     ancho; las reglas del plugin quedan invalidadas por !important
-     y sus grid-row/grid-area con named lines inexistentes caen a
-     auto-placement, que es justo el orden cronológico del markup. */
+  /* ---------- Día: columna simple, NO grid ---------- */
+  /* El bloque inyecta un <style> por día con named lines
+     (time-100900, wordcamp-schedule-track-20…) y un grid-area
+     inline por sesión. Redefinir el grid no las invalida: CSS
+     Grid asume esos nombres en las líneas implícitas y termina
+     encimando todo. Sacando el contenedor de grid, esos
+     grid-row/grid-area inline quedan inertes. */
 
   &__day {
-    display: grid !important;
-    grid-template-columns: $time-col 1fr !important;
-    grid-template-rows: auto !important;
-    grid-auto-rows: auto;
-    column-gap: 20px;
-    row-gap: 0;
-    background: transparent !important;
+    display: flex !important;
+    flex-direction: column;
     position: relative;
-    padding: 0;
+    background: transparent !important;
+    padding: 0 0 0 $rail;
+    margin: 0;
 
     @include breakpoint-down($bp-ticket-card) {
-      grid-template-columns: $time-col-mobile 1fr !important;
-      column-gap: 12px;
+      padding-left: $rail-mobile;
     }
 
     /* Línea vertical de la timeline */
     &::before {
       content: "";
       position: absolute;
-      top: 6px;
-      bottom: 6px;
-      left: $time-col;
+      top: 10px;
+      bottom: 10px;
+      left: $line-center - 1px;
       width: 2px;
       background: rgb(255 255 255 / 18%);
 
       @include breakpoint-down($bp-ticket-card) {
-        left: $time-col-mobile;
+        left: $line-center-mobile - 1px;
       }
     }
   }
 
-  /* ---------- Marcador de hora ---------- */
+  /* ---------- Marcador de hora, encima de su tarjeta ---------- */
 
   &__time-slot-header {
     display: flex !important;
-    align-items: flex-start;
-    justify-content: flex-end;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
     position: relative;
     background: transparent !important;
     border: 0 !important;
     box-shadow: none !important;
-    padding: 17px 14px 0 0;
-    margin: 0 !important;
+    min-width: 0;
+    padding: 0;
+    margin: 22px 0 8px !important;
     color: $yellow;
     @include font-display;
-    font-size: 0.78rem;
+    font-size: 0.85rem;
     font-weight: 600;
+    letter-spacing: 0.3px;
     line-height: 1.2;
-    text-align: right;
-    white-space: normal;
-
-    @include breakpoint-down($bp-ticket-card) {
-      font-size: 0.68rem;
-      padding-right: 10px;
-    }
+    text-align: left;
 
     &.is-empty {
       display: none !important;
     }
 
-    /* Punto sobre la línea, alineado con el borde superior de la tarjeta */
-    &::after {
+    /* Punto sobre la línea */
+    &::before {
       content: "";
       position: absolute;
-      top: 23px;
-      right: -6px;
-      width: 10px;
-      height: 10px;
+      top: 50%;
+      left: $line-center - $rail;
+      width: 11px;
+      height: 11px;
       background: $yellow;
       border: 2px solid $purple;
       border-radius: 50%;
-      transform: translateX(50%);
-      z-index: 2;
+      transform: translate(-50%, -50%);
+
+      @include breakpoint-down($bp-ticket-card) {
+        left: $line-center-mobile - $rail-mobile;
+      }
     }
   }
 
@@ -147,7 +151,7 @@ $time-col-mobile: 62px;
     border-left: 4px solid $orange !important;
     border-radius: 12px;
     padding: 16px 20px;
-    margin: 0 0 18px !important;
+    margin: 0 !important;
     color: $white;
     transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
 
@@ -266,10 +270,6 @@ $time-col-mobile: 62px;
     align-items: center;
     gap: 6px;
     margin: 8px 0 0;
-
-    dt {
-      // screen-reader-text ya la oculta visualmente
-    }
 
     dd {
       background: rgb(255 255 255 / 10%);
