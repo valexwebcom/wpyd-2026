@@ -1,0 +1,333 @@
+@use "abstracts" as *;
+
+/* ============================================================
+   WPYD NIC 2026 — Hero del home
+
+   Rejilla fluida de dos columnas (Wapuu | contenido) que
+   colapsa a una sola en móvil. Reemplazó al lienzo fijo de
+   1440x750 en coordenadas de Figma: sin position:absolute y
+   sin alturas fijas, el contenido define la altura, así que
+   editar un texto ya no descuadra el resto ni recorta el
+   botón entre 1200 y 1288px de ancho.
+
+   Los selectores van planos, no anidados bajo .wpyd-hero:
+   anidarlos sumaría una clase de especificidad y cambiaría
+   la cascada contra el tema.
+   ============================================================ */
+
+.wpyd-hero {
+  position: relative;
+  box-sizing: border-box;
+  display: grid;
+  grid-template-columns: clamp(190px, 24vw, 360px) minmax(0, 860px);
+
+  /* Centra las dos columnas como bloque: sin esto, en monitores
+     anchos el texto se va a la derecha y deja un hueco enorme
+     contra el Wapuu. */
+  justify-content: center;
+  align-items: center;
+  column-gap: clamp(24px, 4vw, 72px);
+  width: 100vw !important;
+  max-width: none !important;
+  height: auto !important;
+  min-height: clamp(460px, 44vw, 700px);
+  margin-left: calc(50% - 50vw) !important;
+  margin-right: calc(50% - 50vw) !important;
+  margin-top: -20px !important;
+  margin-bottom: 0 !important;
+  padding: clamp(40px, 5vw, 72px) clamp(24px, 4vw, 64px) !important;
+  overflow: hidden;
+
+  > * {
+    margin: 0 !important;
+  }
+
+  @include breakpoint-down($bp-hero) {
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: clamp(12px, 3vw, 24px);
+    min-height: 0;
+    padding: clamp(28px, 7vw, 48px) max(20px, env(safe-area-inset-left))
+      clamp(36px, 8vw, 56px) !important;
+  }
+}
+
+/* ---------- Fondo ---------- */
+
+.wpyd-background {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  z-index: 1;
+
+  img {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    object-fit: cover;
+    object-position: center center;
+  }
+}
+
+/* ---------- Circuitos decorativos ---------- */
+
+.wpyd-circuits {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  z-index: 2;
+  pointer-events: none;
+
+  img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover;
+  }
+}
+
+/* ---------- Wapuu ---------- */
+
+.wpyd-wapuu {
+  position: relative;
+  z-index: 5;
+  grid-column: 1;
+  justify-self: center;
+  width: 100% !important;
+  max-width: 360px !important;
+  height: auto !important;
+  padding: 0 !important;
+
+  @include breakpoint-down($bp-hero) {
+    width: min(52vw, 220px) !important;
+  }
+
+  img {
+    display: block;
+    width: 100% !important;
+    height: auto !important;
+    max-width: none !important;
+    object-fit: contain;
+  }
+}
+
+/* ---------- Columna de contenido ---------- */
+/* Un solo eje de alineación y un ritmo vertical consistente.
+   El order corrige el orden del markup: en el DOM el logo
+   viene antes que la línea de bienvenida. */
+
+.wpyd-hero__canvas {
+  position: relative;
+  z-index: 5;
+  grid-column: 2;
+  display: flex !important;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(14px, 1.5vw, 26px);
+  box-sizing: border-box;
+  width: 100% !important;
+  max-width: 760px !important;
+  height: auto !important;
+  min-height: 0 !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  overflow: visible;
+  text-align: center;
+
+  @include breakpoint-down($bp-hero) {
+    grid-column: 1;
+    max-width: 560px !important;
+  }
+
+  > * {
+    width: 100%;
+    margin: 0 !important;
+  }
+}
+
+.wpyd-welcome {
+  order: 1;
+  position: relative !important;
+  inset: auto !important;
+  height: auto !important;
+  padding: 0 !important;
+  font-family: $font-display !important;
+  font-size: clamp(20px, 2.2vw, 30px) !important;
+  font-weight: 400 !important;
+  line-height: 1.35 !important;
+  color: $white;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.wpyd-logo {
+  order: 2;
+  position: relative !important;
+  inset: auto !important;
+  width: 100% !important;
+  max-width: 620px !important;
+  height: auto !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+
+  img {
+    display: block;
+    width: 100% !important;
+    height: auto !important;
+    max-width: none !important;
+    object-fit: contain;
+  }
+}
+
+.wpyd-description {
+  order: 3;
+  position: relative !important;
+  inset: auto !important;
+  width: 100% !important;
+  max-width: 620px !important;
+  height: auto !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  font-family: $font-display !important;
+  font-size: clamp(15px, 1.5vw, 19px) !important;
+  font-weight: 400 !important;
+  line-height: 1.55 !important;
+  color: $white;
+  text-align: center;
+}
+
+/* ---------- Fecha y lugar ---------- */
+/* Fila centrada en el mismo eje que el texto. align-items
+   center hace que compartan línea base aunque el lugar ocupe
+   dos líneas y la fecha una. */
+
+.wpyd-event-meta {
+  order: 4;
+  display: flex !important;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 10px clamp(20px, 3vw, 44px);
+  width: 100% !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+
+  @include breakpoint-down($bp-hero) {
+    gap: 10px 18px;
+  }
+}
+
+.wpyd-event-meta__date,
+.wpyd-event-meta__location {
+  position: relative !important;
+  inset: auto !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px;
+  width: auto !important;
+  max-width: 100%;
+  height: auto !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  color: $white;
+
+  @include breakpoint-down($bp-hero) {
+    flex: 0 1 auto;
+    justify-content: center;
+    max-width: 320px;
+    text-align: left;
+  }
+
+  img {
+    flex: none;
+    width: auto !important;
+    height: 21px !important;
+    margin: 0 !important;
+    object-fit: contain;
+  }
+
+  p {
+    margin: 0 !important;
+    padding: 0 !important;
+    font-family: $font-display !important;
+    font-size: clamp(16px, 1.5vw, 20px) !important;
+    font-weight: 600 !important;
+    line-height: 1.35 !important;
+    letter-spacing: 0.3px !important;
+    color: $yellow !important;
+
+    /* El párrafo trae la clase has-text-align-center del editor,
+       y :root .has-text-align-center gana por especificidad:
+       sin !important el texto se despega de su icono. */
+    text-align: left !important;
+    text-shadow: 0 2px 8px rgb(0 0 0 / 60%);
+    white-space: normal;
+  }
+}
+
+/* ---------- Botón ---------- */
+
+.wpyd-register {
+  order: 5;
+  position: relative !important;
+  inset: auto !important;
+  display: flex !important;
+  justify-content: center;
+  width: 100% !important;
+  height: auto !important;
+  margin-top: clamp(6px, 1vw, 16px) !important;
+  padding: 0 !important;
+
+  .wp-block-button {
+    width: clamp(220px, 20vw, 259px) !important;
+    max-width: 100%;
+    height: clamp(56px, 5vw, 74px) !important;
+    margin: 0 !important;
+
+    @include breakpoint-down($bp-hero) {
+      width: min(100%, 320px) !important;
+      height: 60px !important;
+    }
+  }
+
+  .wp-block-button__link {
+    width: 100% !important;
+    height: 100% !important;
+    box-sizing: border-box;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    margin: 0 !important;
+    border-radius: 40px;
+    font-family: $font-display !important;
+    font-size: clamp(15px, 1.3vw, 18px);
+    text-decoration: none;
+    transition: transform 0.2s ease, filter 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.08);
+      color: $white;
+    }
+
+    &:focus-visible {
+      outline: 3px solid $yellow;
+      outline-offset: 4px;
+    }
+  }
+}
+
+/* ---------- Utilidad del contador ---------- */
+
+.contador {
+  font-variant-numeric: tabular-nums;
+  display: inline-block;
+}
