@@ -386,6 +386,14 @@ body.home .entry-content {
   .wp-block-column li {
     max-width: 62ch;
   }
+
+  /* Sin esto, un párrafo centrado queda con el texto centrado
+     dentro de una caja que arranca pegada a la izquierda: se ve
+     corrido respecto a su sección. */
+  .wp-block-column p.has-text-align-center,
+  .wp-block-column li.has-text-align-center {
+    margin-inline: auto;
+  }
 }
 
 /* ---------- Tarjetas de escuadrón ---------- */
@@ -398,9 +406,50 @@ body.home .entry-content {
    de las ediciones 2024 y 2025 son apaisadas y forzarles 3/4 las
    recortaría mal. */
 
-.wpyd-squads .wp-block-image img {
-  aspect-ratio: 3 / 4;
-  width: 100%;
-  height: auto;
-  object-fit: cover;
+.wpyd-squads {
+  /* El gap por defecto del tema (19px) dejaba las tres fotos
+     prácticamente pegadas. */
+  gap: clamp(20px, 2.4vw, 34px);
+
+  .wp-block-image img {
+    aspect-ratio: 3 / 4;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+}
+
+/* ---------- Tarjetas de llamada a la acción ---------- */
+/* Las dos tarjetas tienen textos de distinto largo, así que sus
+   botones quedaban a alturas distintas. Con la columna en flex y
+   el botón empujado al fondo, quedan alineados sin importar
+   cuánto crezca el texto. */
+
+.wpyd-cta-cards {
+  align-items: stretch;
+
+  > .wp-block-column {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .wp-block-buttons {
+    margin-top: auto;
+  }
+
+  .wp-block-button {
+    width: 100%;
+  }
+
+  /* Mismo ancho y alto en los dos: el texto más largo se iba a dos
+     líneas y dejaba un botón de 112px contra otro de 66px. */
+  .wp-block-button__link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    min-height: 64px;
+    font-size: clamp(1.05rem, 0.9rem + 0.6vw, 1.35rem);
+    text-align: center;
+  }
 }
