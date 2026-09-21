@@ -411,12 +411,26 @@ body.home .entry-content {
      prácticamente pegadas. */
   gap: clamp(20px, 2.4vw, 34px);
 
+  /* Apiladas en móvil, 20px no alcanzaba para separar el texto de un
+     escuadrón de la foto del siguiente. */
+  @include breakpoint-down($bp-columns) {
+    row-gap: 48px;
+  }
+
   .wp-block-image img {
     aspect-ratio: 3 / 4;
     width: 100%;
     height: auto;
     object-fit: cover;
   }
+
+}
+
+/* La regla general de h3 pone margin-top en 0, así que el título
+   quedaba pegado al borde de la foto. Necesita la misma cadena
+   body.home .entry-content para ganarle. */
+body.home .entry-content .wpyd-squads h3 {
+  margin-top: clamp(14px, 1.4vw, 20px);
 }
 
 /* ---------- Tarjetas de llamada a la acción ---------- */
@@ -433,8 +447,12 @@ body.home .entry-content {
     flex-direction: column;
   }
 
+  /* margin-top: auto alinea los botones en desktop, pero en la tarjeta
+     más alta (y en móvil, apiladas) vale 0 y el botón queda pegado al
+     texto. El padding garantiza un mínimo sin romper la alineación. */
   .wp-block-buttons {
     margin-top: auto;
+    padding-top: clamp(20px, 2vw, 28px);
   }
 
   .wp-block-button {
