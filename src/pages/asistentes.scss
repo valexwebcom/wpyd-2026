@@ -1,0 +1,151 @@
+@use "abstracts" as *;
+
+/* ============================================================
+   WPYD NIC 2026 — Lista de asistentes (CampTix)
+
+   CampTix las pinta como floats de 33% con avatar cuadrado de
+   50px y el nombre a 14px/300. Acá pasan a tarjetas en rejilla,
+   con el mismo borde de color rotativo que las tarjetas de
+   entradas para que las dos páginas se sientan del mismo sitio.
+
+   Colores literales por nth-child: el sanitizador de Remote CSS
+   borra las custom properties.
+   ============================================================ */
+
+#tix-attendees {
+  width: 100%;
+  max-width: $wide-size;
+  margin: 2rem auto 3rem;
+
+  .tix-attendee-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 190px), 1fr));
+    gap: clamp(14px, 2vw, 24px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    /* A una columna cada tarjeta medía 206px de alto: con la lista
+       completa sería un scroll interminable. */
+    @include breakpoint-down($bp-ticket-card) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    li {
+      float: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      width: auto;
+      height: auto; /* CampTix fija 80px */
+      margin: 0;
+      padding: 26px 18px 22px;
+      box-sizing: border-box;
+      border: 2px solid $yellow;
+      border-radius: 22px;
+      background: rgb(0 0 0 / 18%);
+      text-align: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+      @include breakpoint-down($bp-ticket-card) {
+        gap: 10px;
+        padding: 18px 10px 16px;
+        border-radius: 18px;
+      }
+
+      img {
+        border-color: $yellow;
+      }
+
+      &:nth-child(3n + 2) {
+        border-color: $orange;
+
+        img {
+          border-color: $orange;
+        }
+      }
+
+      &:nth-child(3n + 3) {
+        border-color: $blue;
+
+        img {
+          border-color: $blue;
+        }
+      }
+
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 28px rgb(0 0 0 / 25%);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
+
+        &:hover {
+          transform: none;
+        }
+      }
+    }
+
+    img {
+      float: none;
+      display: block;
+      width: 88px;
+      height: 88px;
+      margin: 0;
+      border: 3px solid $yellow;
+      border-radius: 50%;
+      object-fit: cover;
+      background: rgb(255 255 255 / 12%);
+
+      @include breakpoint-down($bp-ticket-card) {
+        width: 68px;
+        height: 68px;
+      }
+    }
+  }
+
+  /* Nombre en una línea y apellidos debajo, más tenues: con
+     nombres compuestos ("David Antonio Gonzalez Blanchard") el
+     bloque de cuatro palabras al mismo peso no se leía. */
+  .tix-attendee-name {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin: 0;
+    @include font-display;
+    font-size: 1rem;
+    line-height: 1.3;
+    color: $white;
+    overflow-wrap: anywhere;
+    text-wrap: balance;
+  }
+
+  .tix-first {
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  @include breakpoint-down($bp-ticket-card) {
+    .tix-attendee-name {
+      font-size: 0.85rem;
+    }
+
+    .tix-first {
+      font-size: 0.95rem;
+    }
+  }
+
+  .tix-last {
+    font-weight: 400;
+    color: $muted;
+  }
+}
+
+/* CampTix deja un <br class="tix-clear"> para limpiar los floats;
+   con la rejilla solo suma una línea en blanco. */
+body.page-slug-asistentes .entry-content > .tix-clear {
+  display: none;
+}
