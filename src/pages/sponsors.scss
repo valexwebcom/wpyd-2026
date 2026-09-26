@@ -65,10 +65,11 @@ body.page-slug-sponsors {
 
   /* ---------- Rejilla de logos ---------- */
 
+  /* Sin grid-template-columns propio: el número de columnas lo
+     decide el bloque desde el editor, y esta regla le ganaría por
+     especificidad. Solo se fuerza en móvil, donde el bloque las
+     mantiene todas y los logos quedan ilegibles. */
   .wp-block-post-template {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(min(100%, 170px), 1fr));
-    gap: clamp(14px, 1.8vw, 22px);
     margin: 0;
     padding: 0;
     list-style: none;
