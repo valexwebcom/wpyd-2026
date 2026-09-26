@@ -1,0 +1,169 @@
+@use "abstracts" as *;
+
+/* ============================================================
+   WPYD NIC 2026 — Aliados
+
+   Los logos venían sueltos sobre el morado: los de marcas con
+   tipografía oscura (Yoast, Automattic, Bluehost, Hostinger)
+   casi no se leían. Ahora cada uno va en una tarjeta blanca.
+
+   El bucle de consulta fuerza 5 columnas a cualquier ancho: en
+   un teléfono cada logo medía 18x10px. Acá la rejilla se adapta
+   al ancho disponible.
+
+   Las medidas del editor van en el atributo style de cada
+   figura e imagen, así que anularlas pide !important.
+   ============================================================ */
+
+body.page-slug-sponsors {
+  /* ---------- Cabecera ---------- */
+
+  /* Los dos Wapuus flanquean el título; apilados ocupaban tres
+     filas y 226px antes de llegar al contenido. */
+  .entry-content > .wp-block-columns {
+    flex-wrap: nowrap !important;
+    align-items: center;
+    gap: clamp(10px, 3vw, 24px);
+
+    > .wp-block-column {
+      flex-basis: auto !important;
+
+      &:first-child,
+      &:last-child {
+        flex: 0 0 auto;
+        width: clamp(44px, 12vw, 72px);
+      }
+
+      &:nth-child(2) {
+        flex: 1 1 auto;
+      }
+    }
+
+    .wp-block-image img {
+      width: 100% !important;
+      height: auto !important;
+    }
+
+    p {
+      margin: 0;
+      text-align: center;
+      text-wrap: balance;
+    }
+  }
+
+  /* El primer espaciador mide 100px fijos: en un teléfono es
+     una pantalla casi vacía antes del título. */
+  .entry-content > .wp-block-spacer:first-child {
+    height: clamp(32px, 8vw, 100px) !important;
+  }
+
+  .entry-content > .wp-block-spacer {
+    @include breakpoint-down($bp-ticket-card) {
+      height: 28px !important;
+    }
+  }
+
+  /* ---------- Rejilla de logos ---------- */
+
+  .wp-block-post-template {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 170px), 1fr));
+    gap: clamp(14px, 1.8vw, 22px);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    @include breakpoint-down($bp-ticket-card) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    > li {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+      padding: clamp(14px, 1.6vw, 20px);
+      box-sizing: border-box;
+      min-height: clamp(96px, 10vw, 128px);
+      border-radius: 18px;
+      background: $white;
+      box-shadow: 0 6px 18px rgb(0 0 0 / 28%);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+      &:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 26px rgb(0 0 0 / 35%);
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        transition: none;
+
+        &:hover {
+          transform: none;
+        }
+      }
+    }
+
+    /* La figura trae márgenes y rellenos del editor que dejaban
+       el logo descentrado dentro de la tarjeta. */
+    .wp-block-post-featured-image {
+      width: 100%;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* Alto común para todos: los logos van de cuadrados (Tigo) a
+       muy apaisados (Hostinger, 5:1). Con la proporción 16/9 del
+       editor, los anchos se veían de tamaños muy distintos. */
+    img {
+      width: 100% !important;
+      height: clamp(44px, 5vw, 64px) !important;
+      max-width: 100%;
+      aspect-ratio: auto !important;
+      border: 0 !important;
+      border-radius: 0 !important;
+      box-shadow: none !important;
+      object-fit: contain !important;
+    }
+  }
+
+  /* ---------- Llamada a patrocinar ---------- */
+
+  .entry-content > p:has(> a[href*="docs.google.com"]) {
+    text-align: center;
+
+    a {
+      display: inline-block;
+      margin-top: 6px;
+      padding: 14px 28px;
+      border-radius: 40px;
+      background: $orange;
+      @include font-display;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: $white;
+      text-decoration: none;
+      transition: transform 0.2s ease, filter 0.2s ease;
+
+      &:hover {
+        transform: translateY(-2px);
+        filter: brightness(1.08);
+        color: $white;
+      }
+
+      &:focus-visible {
+        outline: 3px solid $yellow;
+        outline-offset: 4px;
+      }
+    }
+  }
+}
