@@ -1,0 +1,102 @@
+@use "abstracts" as *;
+
+/* ============================================================
+   WPYD NIC 2026 — Organizadores
+
+   El bucle mantiene las 3 columnas configuradas a cualquier
+   ancho: en un teléfono cada tarjeta medía 100px con un avatar
+   de 128px que se salía por los lados, y la biografía caía en
+   columnas de dos o tres letras por línea.
+
+   El número de columnas en escritorio lo sigue decidiendo el
+   editor; acá solo se corrige de tablet para abajo.
+   ============================================================ */
+
+body.page-slug-organizadores {
+  .wp-block-post-template {
+    /* Dos tarjetas por fila donde ya no caben tres... */
+    @include breakpoint-down($bp-columns) {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+
+    /* ...y una sola en teléfono: la tarjeta es un óvalo alto con
+       foto, nombre y biografía, no entra en media pantalla. */
+    @include breakpoint-down($bp-ticket-card) {
+      grid-template-columns: minmax(0, 1fr) !important;
+      gap: 20px;
+    }
+
+    /* Las tarjetas de una misma fila terminaban a alturas
+       distintas (458px y 487px, según si el nombre ocupaba una o
+       dos líneas) y los "Leer Mas" quedaban desalineados. */
+    > li {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .wp-block-columns {
+      flex: 1;
+      margin-bottom: 0;
+    }
+
+    /* La columna viene con alineación vertical centrada, así que no
+       se estira sola. Estirarla con height:100% la dejaba con una
+       altura fija y el "Leer Mas" se salía por debajo del fondo en
+       anchos intermedios; align-self la hace crecer con su
+       contenido. */
+    .wp-block-column {
+      align-self: stretch !important;
+      display: flex;
+      flex-direction: column;
+
+      @include breakpoint-down($bp-ticket-card) {
+        border-radius: 36px !important;
+
+        /* El relleno inferior del editor es fluido y en teléfono
+           baja a 11px: el enlace quedaba rozando el borde. */
+        padding-bottom: 22px !important;
+      }
+    }
+
+    /* Empuja el enlace al pie de la tarjeta, sin importar cuánto
+       ocupen el nombre y la biografía.
+
+       Va centrado: alineado a la izquierda caía dentro de la curva
+       de la esquina (el radio de la tarjeta es de 100px) y parecía
+       salirse del fondo. */
+    .wp-block-read-more {
+      width: fit-content;
+      margin-top: auto;
+      margin-left: auto;
+      margin-right: auto;
+      padding-top: 18px;
+      text-align: center;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+
+      &:focus-visible {
+        outline: 3px solid $yellow;
+        outline-offset: 3px;
+      }
+    }
+
+    /* En una sola columna la biografía llegaba a 90 caracteres
+       por línea. */
+    .wp-block-post-excerpt {
+      p {
+        max-width: 62ch;
+      }
+    }
+
+    /* Con las tarjetas sobre fondo propio, la línea de separación
+       bajo cada una solo suma ruido en móvil. */
+    .wp-block-separator {
+      @include breakpoint-down($bp-ticket-card) {
+        display: none;
+      }
+    }
+  }
+}
