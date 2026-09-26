@@ -86,7 +86,7 @@ body.page-slug-sponsors {
       margin: 0;
       padding: clamp(14px, 1.6vw, 20px);
       box-sizing: border-box;
-      min-height: clamp(96px, 10vw, 128px);
+      min-height: clamp(112px, 11vw, 148px);
       border-radius: 18px;
       background: $white;
       box-shadow: 0 6px 18px rgb(0 0 0 / 28%);
@@ -122,12 +122,17 @@ body.page-slug-sponsors {
       height: 100%;
     }
 
-    /* Alto común para todos: los logos van de cuadrados (Tigo) a
-       muy apaisados (Hostinger, 5:1). Con la proporción 16/9 del
-       editor, los anchos se veían de tamaños muy distintos. */
+    /* Los logos van de cuadrados (Tigo) a muy apaisados (Hostinger,
+       5:1). Con la proporción 16/9 del editor se veían de tamaños
+       muy distintos, así que comparten una caja.
+
+       La caja es alta a propósito: a los apaisados los frena el
+       ancho de la tarjeta, así que solo crecen los cuadrados, que
+       con un alto corto quedaban como un sello diminuto al lado de
+       los demás. */
     img {
       width: 100% !important;
-      height: clamp(44px, 5vw, 64px) !important;
+      height: clamp(52px, 7vw, 92px) !important;
       max-width: 100%;
       aspect-ratio: auto !important;
       border: 0 !important;
