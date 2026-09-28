@@ -328,6 +328,38 @@ body.page-slug-entradas {
       font-size: 1.5rem;
     }
 
+    /* Equivalente en córdobas al lado del precio, solo en las
+       entradas de US$5 (los cuatro escuadrones). Es informativo: el
+       cobro sigue siendo en dólares, porque CampTix maneja una sola
+       moneda por evento.
+
+       Va atado a la clase que CampTix le pone a cada fila con el ID
+       de su entrada (.tix-ticket-167), no a la posición: así aguanta
+       que se reordenen las entradas. Si cambia el tipo de cambio o
+       el precio, hay que actualizar este monto acá. */
+    .tix-ticket-167,
+    .tix-ticket-168,
+    .tix-ticket-169,
+    .tix-ticket-502 {
+      .tix-column-price::after {
+        content: " C$ 185";
+        margin-left: 8px;
+        font-size: 1.05rem;
+        font-weight: 400;
+        color: $muted;
+
+        /* En teléfono el precio y el selector de cantidad comparten
+           la fila del pie de la tarjeta y se tocaban, así que el
+           equivalente pasa a su propia línea. */
+        @include breakpoint-down($bp-ticket-card) {
+          display: block;
+          margin-left: 0;
+          margin-top: 4px;
+          font-size: 0.95rem;
+        }
+      }
+    }
+
     .tix-column-remaining {
       bottom: 14px;
       font-size: 0.85rem;
